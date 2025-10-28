@@ -8,18 +8,19 @@ class Time {
     int hours;
     int minutes;
  void normalize() {
-        while (minutes >=60 ) {
-            hours ++;
-            minutes -= 60;
-        }
-        while (minutes <=0 ) {
-            hours --;
-            minutes += 60;
-        }
-        while (hours<=0) {
-            hours = minutes = 0;
-        }
-    }
+     if(minutes>=60){
+         hours += minutes/60;
+         minutes= minutes % 60;
+     }
+     else if (minutes <=0) {
+         int borrow = (abs(minutes)+59)/60;
+         hours-= borrow;
+         minutes+= borrow*60;
+     }
+     else if (hours <=0) {
+     hours = minutes = 0;
+     }
+ }
 
 public:
     friend ostream& operator<<(ostream& out, Time t);
@@ -32,7 +33,7 @@ public:
     Time(int h, int m): hours(h), minutes(m) {
         normalize();
     }
-    Time operator++() {
+    Time& operator++() {
         minutes++;
         normalize();
         return *this;
@@ -43,7 +44,7 @@ public:
         normalize();
         return temp;
     }
-    Time operator--() {
+    Time& operator--() {
         minutes--;
         normalize();
         return *this;
@@ -52,6 +53,21 @@ public:
         Time temp = *this;
         minutes--;
         normalize();
+        return temp;
+    }
+    Time operator+(const Time& other )const {
+        Time temp(hours+other.hours, minutes+other.minutes);
+        temp.normalize();
+        return temp;
+    }
+    Time operator-(const Time& t) {
+        Time temp(hours-t.hours, minutes-t.minutes);
+        temp.normalize();
+        return temp;
+    }
+    Time operator*(const Time& t) {
+        Time temp(hours*t.hours, minutes*t.minutes);
+        temp.normalize();
         return temp;
     }
 };
