@@ -1,66 +1,90 @@
 //
-// Created by Doniyorbek Egamberdiyev on 24/10/25.
+// Created by Doniyorbek Egamberdiyev on 28/10/25.
 //
 #include <iostream>
+#include <string>
 using namespace std;
-class Distance {
-    int meters;
-    double centimeters;
-public:
-    Distance() {
-        meters = 0;
-        centimeters = 0;
-    }
-    Distance(int m, double c):meters(m), centimeters(c) {}
 
-void normalize() {
-        if (centimeters >= 100) {
-            meters += static_cast<int>(centimeters) / 100;
-            centimeters = fmod(centimeters, 100);
-        } else if (centimeters < 0) {
-            int borrow = (static_cast<int>(-centimeters) / 100) + 1;
-            meters -= borrow;
-            centimeters += borrow * 100;
-        }if (meters < 0) {
-            meters = 0;
-            centimeters = 0;
-        }
+class Time {
+private:
+    int hours;
+    int minutes;
+ void normalize() {
+     if(minutes>=60){
+         hours += minutes/60;
+         minutes= minutes % 60;
+     }
+     else if (minutes <=0) {
+         int borrow = (abs(minutes)+59)/60;
+         hours-= borrow;
+         minutes+= borrow*60;
+     }
+     else if (hours <=0) {
+     hours = minutes = 0;
+     }
+ }
+
+public:
+    friend ostream& operator<<(ostream& out, Time t);
+    friend istream& operator>>(istream& in, Time& t);
+
+    Time() {
+        hours = minutes = 0;
     }
-    void get_data() {
-        cout << "Enter meters: ";
-        cin >> meters;
-        cout << "Enter centimeters: ";
-        cin >> centimeters;
+    Time(int h, int m): hours(h), minutes(m) {
         normalize();
     }
-    void show_data() const {
-        cout << "Distance: " << meters << " meters and "
-             << centimeters << " centimeters." << endl;
-    }
-    Distance operator++() {
-        centimeters++;
+    Time& operator++() {
+        minutes++;
         normalize();
         return *this;
     }
-    Distance operator++(int) {
-        // Distance temp = *this;
-        // centimeters++;
-        // normalize();
-        // return temp;
+    Time operator++(int) {
+        Time temp = *this;
+        minutes++;
+        normalize();
+        return temp;
     }
-    Distance operator+(Distance d) {
-        Distance result;
-        result.meters = meters + d.meters;
-        result.centimeters = centimeters + d.centimeters;
-        result.normalize();
-        return result;
+    Time& operator--() {
+        minutes--;
+        normalize();
+        return *this;
     }
-
+    Time operator--(int) {
+        Time temp = *this;
+        minutes--;
+        normalize();
+        return temp;
+    }
+    Time operator+(const Time& other )const {
+        Time temp(hours+other.hours, minutes+other.minutes);
+        temp.normalize();
+        return temp;
+    }
+    Time operator-(const Time& t) {
+        Time temp(hours-t.hours, minutes-t.minutes);
+        temp.normalize();
+        return temp;
+    }
+    Time operator*(const Time& t) {
+        Time temp(hours*t.hours, minutes*t.minutes);
+        temp.normalize();
+        return temp;
+    }
 };
+ostream& operator <<(ostream& out, Time t) {
+    out<<t.hours<<" hours "<<t.minutes<<" minutes";
+    return out;
+}
+
+istream& operator>>(istream& in, Time& t) {
+    cout<<"Enter the hours and minutes: ";
+    in>>t.hours>>t.minutes;
+    return in;
+}
+
 int main() {
-Distance d1(2,99),d2(2,55),d3;
-    d3=(d1+d2);
-    d1.show_data();
-    d2.show_data();
-    d3.show_data();
+    Time t(23, 100);
+    cin>>t;
+    return 0;
 }
