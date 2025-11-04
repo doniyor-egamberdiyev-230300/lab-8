@@ -25,7 +25,7 @@ public:
        else if (centimeters <= 0){
            int borrow = (abs(centimeters)+99)/100;
            meters -= borrow;
-           centimeters = centimeters + borrow * 100;
+           centimeters += borrow * 100;
        }
        else if (meters <= 0) {
            meters = 0;
@@ -43,7 +43,7 @@ public:
        cout<<"Meters: "<< meters <<" centimeters: "<<centimeters<<endl;
    }
     Distance& operator++() {
-       ++centimeters;
+       centimeters++;
        normalize();
        return *this;
    }
