@@ -2,6 +2,8 @@
 // Created by Doniyorbek Egamberdiyev on 04/11/25.
 //
 #include <iostream>
+#include <cmath>
+#include <stdexcept>
 using namespace std;
 
 class Score {
@@ -22,6 +24,14 @@ ostream& operator<<(ostream& out, Score p) {
     out<<p.points;
     return out;
 }
+template <class T>
+class Pair{
+private:
+T x, y;
+public:
+Pair(T x, T y):x(x),y(y){}
+T min(){return (x<y?x:y);}
+};
 int main() {
     Score score(7);
     Score score2(7);
@@ -36,3 +46,12 @@ int main() {
         cout<<"score does not equal score2"<<endl;
     }
 }
+template <class T>
+class Rectangle {
+    private:
+    T width, length;
+public:
+    Rectangle(T width, T l):width(width),length(l) {
+    }
+    T area(){return length*width;}
+};
